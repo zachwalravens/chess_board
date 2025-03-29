@@ -1,5 +1,19 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
 
+## Downloading svgs
+
+curl https://upload.wikimedia.org/wikipedia/commons/f/f0/Chess_kdt45.svg >king.svg
+
+curl https://upload.wikimedia.org/wikipedia/commons/c/c7/Chess_pdt45.svg >pawn.svg
+
+curl https://upload.wikimedia.org/wikipedia/commons/4/47/Chess_qdt45.svg >queen.svg
+
+curl https://upload.wikimedia.org/wikipedia/commons/f/ff/Chess_rdt45.svg >rook.svg
+
+curl https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_bdt45.svg >bishop.svg
+
+curl https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_ndt45.svg >knight.svg
+
 ## Getting Started
 
 First, run the development server:
