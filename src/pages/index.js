@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { isLegalMove } from './chess_logic.js'
 
 const initialBoardState = [
   ['R','N','B','Q','K','B','N','R'],
@@ -56,7 +57,6 @@ function Board() {
   }, []);
 
   function onClick(row, column) {
-    console.log(`Row: ${row}, Column: ${column}`);
 
     // Select Square
     if (lastSquareClicked === null) {
@@ -68,18 +68,19 @@ function Board() {
       setLastSquareClicked(null);
     } 
     // Move Piece
-    else { 
-      const pieceToMove = boardState[lastSquareClicked[0]][lastSquareClicked[1]];
-      const newBoard = boardState.map(row => [...row]);
-      newBoard[row][column] = pieceToMove;
-      newBoard[lastSquareClicked[0]][lastSquareClicked[1]] = '';
-      setBoardState(newBoard);
-      audio.play();
+    else {
+      const moveIsAllowed = isLegalMove(boardState, lastSquareClicked, [row, column]);
+      if (moveIsAllowed) {
+        const pieceToMove = boardState[lastSquareClicked[0]][lastSquareClicked[1]];
+        const newBoard = boardState.map(row => [...row]);
+        newBoard[row][column] = pieceToMove;
+        newBoard[lastSquareClicked[0]][lastSquareClicked[1]] = '';
+        setBoardState(newBoard);
+        audio.play();
+      }
       setLastSquareClicked(null);
     }
   }
-
-  console.log(boardState);
 
   return (
     <div className="grid">
