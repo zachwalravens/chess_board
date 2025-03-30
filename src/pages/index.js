@@ -46,13 +46,16 @@ function Square({ id, type, onClick, selected }) {
 function Board() {
   const myArr = Array.from({ length: 64 }, (_, index) => index);
 
-  const [audio, setAudio] = useState(null);
+  const [moveAudio, setMoveAudio] = useState(null);
+  const [wrongAudio, setWrongAudio] = useState(null);
   const [lastSquareClicked, setLastSquareClicked] = useState(null);
   const [boardState, setBoardState] = useState(initialBoardState);
+  const [whitesTurn, setWhitesTurn] = useState(true);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      setAudio(new Audio('/move.m4a'));
+      setMoveAudio(new Audio('/move.m4a'));
+      setWrongAudio(new Audio('/wrong.m4a'));
     }
   }, []);
 
@@ -69,14 +72,19 @@ function Board() {
     } 
     // Move Piece
     else {
+      const pieceToMove = boardState[lastSquareClicked[0]][lastSquareClicked[1]];
+      const whiteIsMoving = pieceToMove >= 'a' && pieceToMove <= 'z'
+      const correctTurn = (whiteIsMoving && whitesTurn) || (!whiteIsMoving && !whitesTurn)
       const moveIsAllowed = isLegalMove(boardState, lastSquareClicked, [row, column]);
-      if (moveIsAllowed) {
-        const pieceToMove = boardState[lastSquareClicked[0]][lastSquareClicked[1]];
+      if (moveIsAllowed && correctTurn) {
         const newBoard = boardState.map(row => [...row]);
         newBoard[row][column] = pieceToMove;
         newBoard[lastSquareClicked[0]][lastSquareClicked[1]] = '';
         setBoardState(newBoard);
-        audio.play();
+        setWhitesTurn(!whitesTurn);
+        moveAudio.play();
+      } else {
+        wrongAudio.play();
       }
       setLastSquareClicked(null);
     }
