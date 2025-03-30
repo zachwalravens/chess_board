@@ -60,6 +60,10 @@ export function isLegalMove(boardState, startingSquare, endingSquare) {
         const validMoveDirection = orthogonalMove || diagonalMove;
         return canMoveToEndingSquare && validMoveDirection && acutallyMoves && isPathEmpty(boardState, startingSquare, endingSquare);
     }
+    if (pieceType == 'k') {
+        const singleSquareMove = distanceMovedSquared <= 2;
+        return canMoveToEndingSquare && singleSquareMove && acutallyMoves;
+    }
         
     return false;
 }
