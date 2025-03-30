@@ -17,27 +17,7 @@ export function isLegalMove(boardState, startingSquare, endingSquare) {
         const result = isLegalMove(flippedBoard, newStartingSquare, newEndingSquare);
         return result
     }
-    
-    if (pieceType === 'p')
-        return isLegalPawnMove(boardState, startingSquare, endingSquare);
 
-    if (pieceType == 'n')
-        return isLegalKnightMove(boardState, startingSquare, endingSquare);
-
-    if (pieceType == 'r')
-        return isLegalRookMove(boardState, startingSquare, endingSquare);
-
-    if (pieceType == 'b')
-        return isLegalBishopMove(boardState, startingSquare, endingSquare);
-
-    if (pieceType == 'q')
-        return (isLegalRookMove(boardState, startingSquare, endingSquare)
-                || isLegalBishopMove(boardState, startingSquare, endingSquare));
-
-    return false
-}
-
-function isLegalBishopMove(boardState, startingSquare, endingSquare) {
     const [startingSquareRow, startingSquareColumn] = startingSquare;
     const [endingSquareRow, endingSquareColumn] = endingSquare;
     const endingSquareValue = boardState[endingSquareRow][endingSquareColumn];
@@ -47,63 +27,75 @@ function isLegalBishopMove(boardState, startingSquare, endingSquare) {
     const movesForwardBy = startingSquareRow - endingSquareRow;
     const movesSizewaysBy = startingSquareColumn - endingSquareColumn;
     const diagonalMove = Math.abs(movesForwardBy) === Math.abs(movesSizewaysBy);
-    const acutallyMoves = movesForwardBy !== 0 || movesSizewaysBy !== 0;
-
-    return canMoveToEndingSquare && diagonalMove && acutallyMoves;
-}
-
-function isLegalRookMove(boardState, startingSquare, endingSquare) {
-    const [startingSquareRow, startingSquareColumn] = startingSquare;
-    const [endingSquareRow, endingSquareColumn] = endingSquare;
-    const endingSquareValue = boardState[endingSquareRow][endingSquareColumn];
-    const endingSquareEmpty = endingSquareValue === '';
-    const enemyOnEndingSquare = endingSquareValue >= 'A' && endingSquareValue <= 'Z';
-    const canMoveToEndingSquare = endingSquareEmpty || enemyOnEndingSquare;
-    const movesForwardBy = startingSquareRow - endingSquareRow;
-    const movesSizewaysBy = startingSquareColumn - endingSquareColumn;
     const orthogonalMove = movesForwardBy === 0 || movesSizewaysBy === 0;
     const acutallyMoves = movesForwardBy !== 0 || movesSizewaysBy !== 0;
-
-    return canMoveToEndingSquare && orthogonalMove && acutallyMoves;
-}
-
-function isLegalKnightMove(boardState, startingSquare, endingSquare) {
-    const [startingSquareRow, startingSquareColumn] = startingSquare;
-    const [endingSquareRow, endingSquareColumn] = endingSquare;
-    const endingSquareValue = boardState[endingSquareRow][endingSquareColumn];
-
-    const movesForwardBy = startingSquareRow - endingSquareRow;
-    const movesSizewaysBy = startingSquareColumn - endingSquareColumn;
     const distanceMovedSquared = movesForwardBy ** 2 + movesSizewaysBy ** 2;
-    const endingSquareEmpty = endingSquareValue === '';
-    const enemyOnEndingSquare = endingSquareValue >= 'A' && endingSquareValue <= 'Z';
-    const canMoveToEndingSquare = endingSquareEmpty || enemyOnEndingSquare
-    return distanceMovedSquared == 5 && canMoveToEndingSquare;
+    const onStartingSquare = startingSquareRow === 6;
+    
+    if (pieceType === 'p') {
+        const intermediateSquareEmpty = boardState[endingSquareRow+1][endingSquareColumn] === '';
+        // Move forward 2 at start
+        if (onStartingSquare && movesForwardBy === 2 && movesSizewaysBy === 0 && endingSquareEmpty && intermediateSquareEmpty)
+            return true;
+        // Move forward 1
+        if (movesForwardBy === 1 && endingSquareEmpty && movesSizewaysBy === 0)
+            return true;
+        // Attacks enemy
+        if (movesForwardBy === 1 && Math.abs(movesSizewaysBy) === 1 && enemyOnEndingSquare)
+            return true;
+
+        return false;
+    }
+
+    if (pieceType == 'n')
+        return distanceMovedSquared == 5 && canMoveToEndingSquare;
+
+    if (pieceType == 'r')
+        return canMoveToEndingSquare && orthogonalMove && acutallyMoves && isPathEmpty(boardState, startingSquare, endingSquare);
+
+    if (pieceType == 'b')
+        return canMoveToEndingSquare && diagonalMove && acutallyMoves && isPathEmpty(boardState, startingSquare, endingSquare);
+
+    if (pieceType == 'q') {
+        const validMoveDirection = orthogonalMove || diagonalMove;
+        return canMoveToEndingSquare && validMoveDirection && acutallyMoves && isPathEmpty(boardState, startingSquare, endingSquare);
+    }
+        
+    return false;
 }
 
-function isLegalPawnMove(boardState, startingSquare, endingSquare) {
+function isPathEmpty(boardState, startingSquare, endingSquare) {
     const [startingSquareRow, startingSquareColumn] = startingSquare;
     const [endingSquareRow, endingSquareColumn] = endingSquare;
 
-   
-    const onStartingSquare = startingSquareRow === 6;
-    const movesForwardBy = startingSquareRow - endingSquareRow;
-    const movesSizewaysBy = startingSquareColumn - endingSquareColumn;
-    const endingSquareValue =  boardState[endingSquareRow][endingSquareColumn];
-    const endingSquareEmpty = endingSquareValue === '';
-    const intermediateSquareEmpty = boardState[endingSquareRow+1][endingSquareColumn] === '';
-    const enemyOnEndingSquare = endingSquareValue >= 'A' && endingSquareValue <= 'Z';
-     // Move forward 2 at start
-    if (onStartingSquare && movesForwardBy === 2 && movesSizewaysBy === 0 && endingSquareEmpty && intermediateSquareEmpty)
-        return true;
-    // Move forward 1
-    if (movesForwardBy === 1 && endingSquareEmpty && movesSizewaysBy === 0)
-        return true;
-    // Attacks enemy
-    if (movesForwardBy === 1 && Math.abs(movesSizewaysBy) === 1 && enemyOnEndingSquare)
-        return true;
-    
-    return false;
+    // Find the direction the piece will travel in
+    const verticalDirection = (() => {
+        if (endingSquareRow > startingSquareRow)
+            return 1;
+        else if (endingSquareRow === startingSquareRow)
+            return 0;
+        else
+            return -1;
+    })();
+    const horizontalDirection = (() => {
+        if (endingSquareColumn > startingSquareColumn)
+            return 1;
+        else if (endingSquareColumn === startingSquareColumn)
+            return 0;
+        else
+            return -1;
+    })();
+
+    // Iterative over all squares between the move start and end to make sure they're empty
+    let currentRow = startingSquareRow + verticalDirection;
+    let currrentColumn = startingSquareColumn + horizontalDirection;
+    while (currentRow !== endingSquareRow || currrentColumn !== endingSquareColumn) {
+        if (boardState[currentRow][currrentColumn] != '')
+            return false;
+        currentRow = currentRow + verticalDirection;
+        currrentColumn = currrentColumn + horizontalDirection;
+    }
+    return true;
 }
 
 function flipBoardAndColor(boardState) {
