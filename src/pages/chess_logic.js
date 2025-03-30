@@ -1,5 +1,9 @@
 const assert = require('assert');
 
+function printBoard(boardState) {
+    boardState.map(row => console.log(row));
+}
+
 // Just implement for white for now
 // Pure function
 export function isLegalMove(boardState, startingSquare, endingSquare) {
@@ -7,12 +11,74 @@ export function isLegalMove(boardState, startingSquare, endingSquare) {
     const movingBlackPiece = (pieceType >= 'A' && pieceType <= 'Z');
     if (movingBlackPiece) {
         const flippedBoard = flipBoardAndColor(boardState);
-        return isLegalMove(flippedBoard, startingSquare, endingSquare);
+        const newStartingSquare = [7 - startingSquare[0], startingSquare[1]];
+        const newEndingSquare = [7 - endingSquare[0], endingSquare[1]];
+        printBoard(flippedBoard);
+        const result = isLegalMove(flippedBoard, newStartingSquare, newEndingSquare);
+        return result
     }
     
     if (pieceType === 'p')
         return isLegalPawnMove(boardState, startingSquare, endingSquare);
+
+    if (pieceType == 'n')
+        return isLegalKnightMove(boardState, startingSquare, endingSquare);
+
+    if (pieceType == 'r')
+        return isLegalRookMove(boardState, startingSquare, endingSquare);
+
+    if (pieceType == 'b')
+        return isLegalBishopMove(boardState, startingSquare, endingSquare);
+
+    if (pieceType == 'q')
+        return (isLegalRookMove(boardState, startingSquare, endingSquare)
+                || isLegalBishopMove(boardState, startingSquare, endingSquare));
+
     return false
+}
+
+function isLegalBishopMove(boardState, startingSquare, endingSquare) {
+    const [startingSquareRow, startingSquareColumn] = startingSquare;
+    const [endingSquareRow, endingSquareColumn] = endingSquare;
+    const endingSquareValue = boardState[endingSquareRow][endingSquareColumn];
+    const endingSquareEmpty = endingSquareValue === '';
+    const enemyOnEndingSquare = endingSquareValue >= 'A' && endingSquareValue <= 'Z';
+    const canMoveToEndingSquare = endingSquareEmpty || enemyOnEndingSquare;
+    const movesForwardBy = startingSquareRow - endingSquareRow;
+    const movesSizewaysBy = startingSquareColumn - endingSquareColumn;
+    const diagonalMove = Math.abs(movesForwardBy) === Math.abs(movesSizewaysBy);
+    const acutallyMoves = movesForwardBy !== 0 || movesSizewaysBy !== 0;
+
+    return canMoveToEndingSquare && diagonalMove && acutallyMoves;
+}
+
+function isLegalRookMove(boardState, startingSquare, endingSquare) {
+    const [startingSquareRow, startingSquareColumn] = startingSquare;
+    const [endingSquareRow, endingSquareColumn] = endingSquare;
+    const endingSquareValue = boardState[endingSquareRow][endingSquareColumn];
+    const endingSquareEmpty = endingSquareValue === '';
+    const enemyOnEndingSquare = endingSquareValue >= 'A' && endingSquareValue <= 'Z';
+    const canMoveToEndingSquare = endingSquareEmpty || enemyOnEndingSquare;
+    const movesForwardBy = startingSquareRow - endingSquareRow;
+    const movesSizewaysBy = startingSquareColumn - endingSquareColumn;
+    const orthogonalMove = movesForwardBy === 0 || movesSizewaysBy === 0;
+    const acutallyMoves = movesForwardBy !== 0 || movesSizewaysBy !== 0;
+
+    return canMoveToEndingSquare && orthogonalMove && acutallyMoves;
+}
+
+function isLegalKnightMove(boardState, startingSquare, endingSquare) {
+    const [startingSquareRow, startingSquareColumn] = startingSquare;
+    const [endingSquareRow, endingSquareColumn] = endingSquare;
+    const endingSquareValue = boardState[endingSquareRow][endingSquareColumn];
+
+    const movesForwardBy = startingSquareRow - endingSquareRow;
+    const movesSizewaysBy = startingSquareColumn - endingSquareColumn;
+    const distanceMovedSquared = movesForwardBy ** 2 + movesSizewaysBy ** 2;
+    const endingSquareEmpty = endingSquareValue === '';
+    const enemyOnEndingSquare = endingSquareValue >= 'A' && endingSquareValue <= 'Z';
+    const canMoveToEndingSquare = endingSquareEmpty || enemyOnEndingSquare
+    return distanceMovedSquared == 5 && canMoveToEndingSquare;
 }
 
 function isLegalPawnMove(boardState, startingSquare, endingSquare) {
