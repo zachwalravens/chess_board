@@ -9,7 +9,7 @@ curl https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_ndt45.svg >black_
 
 curl https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt45.svg >white_king.svg
 curl https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt45.svg >white_pawn.svg
-curl https://upload.wikimedia.org/wikipedia/commons/4/47/Chess_qlt45.svg >white_queen.svg
+curl https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_qlt45.svg >white_queen.svg
 curl https://upload.wikimedia.org/wikipedia/commons/7/72/Chess_rlt45.svg >white_rook.svg
 curl https://upload.wikimedia.org/wikipedia/commons/b/b1/Chess_blt45.svg >white_bishop.svg
 curl https://upload.wikimedia.org/wikipedia/commons/7/70/Chess_nlt45.svg >white_knight.svg

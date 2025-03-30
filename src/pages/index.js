@@ -11,10 +11,12 @@ const initialBoardState = [
   ['r','n','b','q','k','b','n','r']
 ];
 
-function Square({ id, type, onClick }) {
+function Square({ id, type, onClick, selected }) {
   let squareColor = 'light';
   if ((id[0] + id[1]) % 2 === 0)
     squareColor = 'dark';
+  if (selected)
+    squareColor = 'selected-color'
 
   const pieceMappings = {
     "p": "/white_pawn.svg",
@@ -76,7 +78,12 @@ function Board() {
       {myArr.map((index) => {
         const column = index % 8;
         const row = Math.floor(index / 8);
-        return <Square key={index} id={[row, column]} type={boardState[row][column]} onClick={() => onClick(row, column)} />
+        return (<Square key={index}
+                        id={[row, column]}
+                        type={boardState[row][column]}
+                        onClick={() => onClick(row, column)}
+                        selected={lastSquareClicked && lastSquareClicked[0] === row && lastSquareClicked[1] === column}
+                />)
       })}
     </div>
   )
