@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { isLegalMove } from './chess_logic.js'
+import { isLegalMove } from '../utils/chess_logic.js'
 
 const initialBoardState = [
   ['R','N','B','Q','K','B','N','R'],
