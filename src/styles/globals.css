@@ -1,12 +1,16 @@
+:root {
+  --square-size:  min(80px, 12vw);
+}
+
 .square {
-  width: 100px;
-  height: 100px;
+  width: var(--square-size);
+  height: var(--square-size);
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(8, 100px);
-  grid-template-rows: repeat(8, 100px);
+  grid-template-columns: repeat(8,  var(--square-size));
+  grid-template-rows: repeat(8,  var(--square-size));
 }
 
 .light {
