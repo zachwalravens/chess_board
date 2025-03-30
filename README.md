@@ -1,16 +1,19 @@
 ## Downloading svgs
 
-curl https://upload.wikimedia.org/wikipedia/commons/f/f0/Chess_kdt45.svg >king.svg
+curl https://upload.wikimedia.org/wikipedia/commons/f/f0/Chess_kdt45.svg >black_king.svg
+curl https://upload.wikimedia.org/wikipedia/commons/c/c7/Chess_pdt45.svg >black_pawn.svg
+curl https://upload.wikimedia.org/wikipedia/commons/4/47/Chess_qdt45.svg >black_queen.svg
+curl https://upload.wikimedia.org/wikipedia/commons/f/ff/Chess_rdt45.svg >black_rook.svg
+curl https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_bdt45.svg >black_bishop.svg
+curl https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_ndt45.svg >black_knight.svg
 
-curl https://upload.wikimedia.org/wikipedia/commons/c/c7/Chess_pdt45.svg >pawn.svg
+curl https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt45.svg >white_king.svg
+curl https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt45.svg >white_pawn.svg
+curl https://upload.wikimedia.org/wikipedia/commons/4/47/Chess_qlt45.svg >white_queen.svg
+curl https://upload.wikimedia.org/wikipedia/commons/7/72/Chess_rlt45.svg >white_rook.svg
+curl https://upload.wikimedia.org/wikipedia/commons/b/b1/Chess_blt45.svg >white_bishop.svg
+curl https://upload.wikimedia.org/wikipedia/commons/7/70/Chess_nlt45.svg >white_knight.svg
 
-curl https://upload.wikimedia.org/wikipedia/commons/4/47/Chess_qdt45.svg >queen.svg
-
-curl https://upload.wikimedia.org/wikipedia/commons/f/ff/Chess_rdt45.svg >rook.svg
-
-curl https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_bdt45.svg >bishop.svg
-
-curl https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_ndt45.svg >knight.svg
 
 ## Getting Started
 

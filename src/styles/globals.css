@@ -13,8 +13,16 @@
   background-color: #f0d9a5;
 }
 
+.light:hover {
+  background-color: #c2b086;
+}
+
 .dark {
   background-color: #7d5019;
+}
+
+.dark:hover {
+  background-color: #5c3b12;
 }
 
 .piece {

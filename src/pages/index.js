@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
 
 const initialBoardState = [
-  ['r','n','b','q','k','b','n','r'],
-  ['p','p','p','p','p','p','p','p'],
-  ['','','','','','','',''],
-  ['','','','','','','',''],
-  ['','','','','','','',''],
-  ['','','','','','','',''],
+  ['R','N','B','Q','K','B','N','R'],
   ['P','P','P','P','P','P','P','P'],
-  ['R','N','B','Q','K','B','N','R']
+  ['','','','','','','',''],
+  ['','','','','','','',''],
+  ['','','','','','','',''],
+  ['','','','','','','',''],
+  ['p','p','p','p','p','p','p','p'],
+  ['r','n','b','q','k','b','n','r']
 ];
 
 function Square({ id, type, onClick }) {
@@ -17,18 +17,18 @@ function Square({ id, type, onClick }) {
     squareColor = 'dark';
 
   const pieceMappings = {
-    "p": "/pawn.svg",
-    "P": "/pawn.svg",
-    "n": "/knight.svg",
-    "N": "/knight.svg",
-    "b": "/bishop.svg",
-    "B": "/bishop.svg",
-    "r": "/rook.svg",
-    "R": "/rook.svg",
-    "q": "/queen.svg",
-    "Q": "/queen.svg",
-    "k": "/king.svg",
-    "K": "/king.svg"
+    "p": "/white_pawn.svg",
+    "P": "/black_pawn.svg",
+    "n": "/white_knight.svg",
+    "N": "/black_knight.svg",
+    "b": "/white_bishop.svg",
+    "B": "/black_bishop.svg",
+    "r": "/white_rook.svg",
+    "R": "/black_rook.svg",
+    "q": "/white_queen.svg",
+    "Q": "/black_queen.svg",
+    "k": "/white_king.svg",
+    "K": "/black_king.svg"
   };
 
   const imgSource = pieceMappings[type];
@@ -75,7 +75,7 @@ function Board() {
     <div className="grid">
       {myArr.map((index) => {
         const column = index % 8;
-        const row = 7 - Math.floor(index / 8);
+        const row = Math.floor(index / 8);
         return <Square key={index} id={[row, column]} type={boardState[row][column]} onClick={() => onClick(row, column)} />
       })}
     </div>
