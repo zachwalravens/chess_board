@@ -16,7 +16,7 @@ function Square({ id, type, onClick, selected }) {
   if ((id[0] + id[1]) % 2 === 0)
     squareColor = 'dark';
   if (selected)
-    squareColor = 'selected-color'
+    squareColor = 'selected-color';
 
   const pieceMappings = {
     "p": "/white_pawn.svg",
@@ -43,11 +43,11 @@ function Square({ id, type, onClick, selected }) {
 }
 
 function Board() {
-  const myArr = Array.from({ length: 64 }, (_, index) => index)
+  const myArr = Array.from({ length: 64 }, (_, index) => index);
 
-  const [audio, setAudio] = useState(null)
-  const [lastSquareClicked, setLastSquareClicked] = useState(null)
-  const [boardState, setBoardState] = useState(initialBoardState)
+  const [audio, setAudio] = useState(null);
+  const [lastSquareClicked, setLastSquareClicked] = useState(null);
+  const [boardState, setBoardState] = useState(initialBoardState);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -56,22 +56,30 @@ function Board() {
   }, []);
 
   function onClick(row, column) {
-    console.log(`Row: ${row}, Column: ${column}`)
+    console.log(`Row: ${row}, Column: ${column}`);
 
+    // Select Square
     if (lastSquareClicked === null) {
-      setLastSquareClicked([row, column])
-    } else {
-      const pieceToMove = boardState[lastSquareClicked[0]][lastSquareClicked[1]]
-      const newBoard = boardState.map(row => [...row])
-      newBoard[row][column] = pieceToMove
-      newBoard[lastSquareClicked[0]][lastSquareClicked[1]] = ''
-      setBoardState(newBoard)
-      audio.play()
-      setLastSquareClicked(null)
+      
+      setLastSquareClicked([row, column]);
+    }
+    // Deselect Square
+    else if (lastSquareClicked[0] === row && lastSquareClicked[1] === column) {
+      setLastSquareClicked(null);
+    } 
+    // Move Piece
+    else { 
+      const pieceToMove = boardState[lastSquareClicked[0]][lastSquareClicked[1]];
+      const newBoard = boardState.map(row => [...row]);
+      newBoard[row][column] = pieceToMove;
+      newBoard[lastSquareClicked[0]][lastSquareClicked[1]] = '';
+      setBoardState(newBoard);
+      audio.play();
+      setLastSquareClicked(null);
     }
   }
 
-  console.log(boardState)
+  console.log(boardState);
 
   return (
     <div className="grid">
