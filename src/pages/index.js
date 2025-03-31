@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { isLegalMove } from '../utils/chess_logic.js'
 
-const initialBoardState = [
+const initialBoard = [
   ['R','N','B','Q','K','B','N','R'],
   ['P','P','P','P','P','P','P','P'],
   ['','','','','','','',''],
@@ -11,6 +11,17 @@ const initialBoardState = [
   ['p','p','p','p','p','p','p','p'],
   ['r','n','b','q','k','b','n','r']
 ];
+
+const initialGameState = {
+  board: initialBoard,
+  whiteCanCastleB: true,
+  whiteCanCastleG: true,
+  blackCanCastleB: true,
+  blackCanCastleG: true,
+  enPassantSquare: null,
+  enPassantPawnSquare: null,
+  whitesTurn: true
+}
 
 function Square({ id, type, onClick, selected }) {
   let squareColor = 'light';
@@ -38,7 +49,7 @@ function Square({ id, type, onClick, selected }) {
 
   return (
     <div className={'square ' + squareColor} onClick={onClick}>
-      {type != '' && <img className="piece" src={imgSource} alt="Pawn" />}
+      {type != '' && <img className="piece" src={imgSource} alt={imgSource} />}
     </div>
   )
 }
@@ -49,7 +60,7 @@ function Board() {
   const [moveAudio, setMoveAudio] = useState(null);
   const [wrongAudio, setWrongAudio] = useState(null);
   const [lastSquareClicked, setLastSquareClicked] = useState(null);
-  const [boardState, setBoardState] = useState(initialBoardState);
+  const [gameState, setGameState] = useState(initialGameState);
   const [whitesTurn, setWhitesTurn] = useState(true);
 
   useEffect(() => {
@@ -72,7 +83,7 @@ function Board() {
     } 
     // Move Piece
     else {
-      const pieceToMove = boardState[lastSquareClicked[0]][lastSquareClicked[1]];
+      const pieceToMove = boardState['board'][lastSquareClicked[0]][lastSquareClicked[1]];
       const whiteIsMoving = pieceToMove >= 'a' && pieceToMove <= 'z'
       const correctTurn = (whiteIsMoving && whitesTurn) || (!whiteIsMoving && !whitesTurn)
       const moveIsAllowed = isLegalMove(boardState, lastSquareClicked, [row, column]);
