@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { isLegalMove } from '../utils/chess_logic.js'
+import { getPostMoveState, isLegalMove } from '../utils/chess_logic.js'
 
 const initialBoard = [
   ['R','N','B','Q','K','B','N','R'],
@@ -61,7 +61,7 @@ function Board() {
   const [wrongAudio, setWrongAudio] = useState(null);
   const [lastSquareClicked, setLastSquareClicked] = useState(null);
   const [gameState, setGameState] = useState(initialGameState);
-  const [whitesTurn, setWhitesTurn] = useState(true);
+  const boardState = gameState['board'];
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -83,16 +83,9 @@ function Board() {
     } 
     // Move Piece
     else {
-      const pieceToMove = boardState['board'][lastSquareClicked[0]][lastSquareClicked[1]];
-      const whiteIsMoving = pieceToMove >= 'a' && pieceToMove <= 'z'
-      const correctTurn = (whiteIsMoving && whitesTurn) || (!whiteIsMoving && !whitesTurn)
-      const moveIsAllowed = isLegalMove(boardState, lastSquareClicked, [row, column]);
-      if (moveIsAllowed && correctTurn) {
-        const newBoard = boardState.map(row => [...row]);
-        newBoard[row][column] = pieceToMove;
-        newBoard[lastSquareClicked[0]][lastSquareClicked[1]] = '';
-        setBoardState(newBoard);
-        setWhitesTurn(!whitesTurn);
+      const newGameState = getPostMoveState(gameState, lastSquareClicked, [row, column]);
+      if (newGameState !== null) {
+        setGameState(newGameState)
         moveAudio.play();
       } else {
         wrongAudio.play();

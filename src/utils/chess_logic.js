@@ -1,18 +1,12 @@
 const assert = require('assert');
 
-function printBoard(boardState) {
+export function printBoard(boardState) {
     boardState.map(row => console.log(row));
 }
 
 // Pure function
 export function getPostMoveState(gameState, startingSquare, endingSquare) {
-    const board = gameState['board']
-
-}
-
-// Just implement for white for now
-// Pure function
-export function getPostMoveState(gameState, startingSquare, endingSquare) {
+    const boardState = gameState['board'];
     let boardStateCopy = boardState.map(row => [...row]);
     let newGameState = {
         board: boardStateCopy,
@@ -21,23 +15,26 @@ export function getPostMoveState(gameState, startingSquare, endingSquare) {
         whiteCastleG: gameState['whiteCastleG'],
         blackCastleG: gameState['blackCastleG'],
         enPassantSquare: null,
-        enPassantPawnSquare: null
+        enPassantPawnSquare: null,
+        whitesTurn: !gameState['whitesTurn']
     }
 
-    const boardState = gameState['board'];
     const pieceType = boardState[startingSquare[0]][startingSquare[1]];
     const movingBlackPiece = (pieceType >= 'A' && pieceType <= 'Z');
 
     // Trying to move the other players piece
-    if (movingBlackPiece && gameState['whitesTurn'] || !movingBlackPiece && !gameState['whitesTurn'])
+    if (movingBlackPiece && gameState['whitesTurn'] || !movingBlackPiece && !gameState['whitesTurn']) {
         return null;
+    }
 
     // Flip logic for Black's moves
     if (movingBlackPiece) {
-        const flippedBoard = flipBoardAndColor(boardState);
+        const flippedGame = flipBoardAndColor(gameState);
         const newStartingSquare = [7 - startingSquare[0], startingSquare[1]];
         const newEndingSquare = [7 - endingSquare[0], endingSquare[1]];
-        const rawResult = getPostMoveState(flippedBoard, newStartingSquare, newEndingSquare);
+        const rawResult = getPostMoveState(flippedGame, newStartingSquare, newEndingSquare);
+        if (rawResult === null)
+            return null;
         return flipBoardAndColor(rawResult);
     }
 
@@ -54,7 +51,9 @@ export function getPostMoveState(gameState, startingSquare, endingSquare) {
     const acutallyMoves = movesForwardBy !== 0 || movesSizewaysBy !== 0;
     const distanceMovedSquared = movesForwardBy ** 2 + movesSizewaysBy ** 2;
     const onStartingSquare = startingSquareRow === 6;
-    [enPassantRow, enPassantColumn] = gameState['enPassantSquare'];
+    let [enPassantRow, enPassantColumn] = [null, null];
+    if (gameState['enPassantSquare'] !== null)
+        [enPassantRow, enPassantColumn] = gameState['enPassantSquare'];
     const attacksEnPassant = endingSquareRow === enPassantRow && endingSquareColumn === enPassantColumn;
     let movedPiece = null;
     
@@ -85,32 +84,32 @@ export function getPostMoveState(gameState, startingSquare, endingSquare) {
 
     if (pieceType == 'n')
         if (distanceMovedSquared == 5 && canMoveToEndingSquare)
-            moved = 'n';
+            movedPiece = 'n';
 
     if (pieceType == 'r')
         if (canMoveToEndingSquare && orthogonalMove && acutallyMoves && isPathEmpty(boardState, startingSquare, endingSquare))
-            moved = 'r';
+            movedPiece = 'r';
 
     if (pieceType == 'b')
         if (canMoveToEndingSquare && diagonalMove && acutallyMoves && isPathEmpty(boardState, startingSquare, endingSquare))
-            moved = 'b';
+            movedPiece = 'b';
 
     if (pieceType == 'q') {
         const validMoveDirection = orthogonalMove || diagonalMove;
         if (canMoveToEndingSquare && validMoveDirection && acutallyMoves && isPathEmpty(boardState, startingSquare, endingSquare))
-            moved = 'q'
+            movedPiece = 'q'
     }
     if (pieceType == 'k') {
         const singleSquareMove = distanceMovedSquared <= 2;
         if (canMoveToEndingSquare && singleSquareMove && acutallyMoves)
-            moved = 'k'
+            movedPiece = 'k'
     }
 
-    if (moved === null) {
+    if (movedPiece === null) {
         return null;
     } else {
         newGameState['board'][startingSquareRow][startingSquareColumn] = '';
-        newGameState['board'][endingSquareRow][endingSquareColumn] = '';
+        newGameState['board'][endingSquareRow][endingSquareColumn] = movedPiece;
         return newGameState
     }
 }
@@ -163,7 +162,7 @@ function flipSquare(square) {
 
 // Doesn't modify gameState but returns a new one
 function flipBoardAndColor(gameState) {
-    let boardStateCopy = boardState.map(row => [...row]);
+    let boardStateCopy = gameState['board'].map(row => [...row]);
     // Swap orientation
     boardStateCopy = boardStateCopy.reverse();
     // Swap colors
@@ -176,7 +175,8 @@ function flipBoardAndColor(gameState) {
         whiteCastleG: gameState['blackCastleG'],
         blackCastleG: gameState['whiteCastleG'],
         enPassantSquare: flipSquare(gameState['enPassantSquare']),
-        enPassantPawnSquare: flipSquare(gameState['enPassantPawnSquare'])
+        enPassantPawnSquare: flipSquare(gameState['enPassantPawnSquare']),
+        whitesTurn: !gameState['whiteTurn']
     };
 }
 
