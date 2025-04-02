@@ -1,9 +1,13 @@
 const assert = require('assert');
 
+// Prints out the board in an easy to read format.
+// (one line per rank)
 export function printBoard(boardState) {
     boardState.map(row => console.log(row));
 }
 
+// Takes the state of the game before a move and returns the state at the end.
+// Returns null if the move is not legal
 // Pure function
 export function getPostMoveState(gameState, startingSquare, endingSquare) {
     const boardState = gameState['board'];
@@ -114,6 +118,8 @@ export function getPostMoveState(gameState, startingSquare, endingSquare) {
     }
 }
 
+// Checks if all of the squares between two squares are empty
+// Used to validate bishop, rook and queen movements
 function isPathEmpty(boardState, startingSquare, endingSquare) {
     const [startingSquareRow, startingSquareColumn] = startingSquare;
     const [endingSquareRow, endingSquareColumn] = endingSquare;
@@ -148,6 +154,7 @@ function isPathEmpty(boardState, startingSquare, endingSquare) {
     return true;
 }
 
+// Auxilary function to help flipping the board between white and black
 function flipSquare(square) { 
     const newSquare = (() => {
         if (square === null) {
@@ -160,6 +167,8 @@ function flipSquare(square) {
     return newSquare
 }
 
+// Swaps the board state. So black pieces become white pieces and all of the ranks are reversed.
+// Used to validate moves
 // Doesn't modify gameState but returns a new one
 function flipBoardAndColor(gameState) {
     let boardStateCopy = gameState['board'].map(row => [...row]);
@@ -180,6 +189,8 @@ function flipBoardAndColor(gameState) {
     };
 }
 
+// Changes capital letters to lowercase and lowercase to capitals
+// Used to flip the color of pieces
 function swapCase(character) {
     if (character >= 'a' && character <= 'z') {
         return character.toUpperCase();
